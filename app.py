@@ -5,7 +5,7 @@ import requests
 import streamlit as st
 
 # ===============================================================
-# CONFIGURAÇÃO DA PÁGINA
+# CONFIGURAÇÃO DA PÁGINA COM TEMA ROXO
 # ===============================================================
 st.set_page_config(
     layout="wide", 
@@ -45,17 +45,6 @@ st.markdown("""
         border-left: 5px solid #6A0DAD;
         margin: 1rem 0;
     }
-    .stTabs [data-baseweb="tab-list"] {
-        gap: 2rem;
-    }
-    .stTabs [data-baseweb="tab"] {
-        height: 50px;
-        white-space: pre-wrap;
-        background-color: #E6E6FA;
-        border-radius: 10px 10px 0px 0px;
-        gap: 1rem;
-        padding: 10px 20px;
-    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -71,15 +60,15 @@ CORES_ROXO = {
 }
 
 CORES_REGIOES = {
-    'Norte': '#4B0082',      # Roxo escuro
-    'Nordeste': '#8A2BE2',   # Roxo azulado
-    'Sudeste': '#9370DB',    # Roxo médio
-    'Sul': '#BA55D3',        # Roxo claro
-    'Centro-Oeste': '#DA70D6' # Orquídea
+    'Norte': '#4B0082',
+    'Nordeste': '#8A2BE2',
+    'Sudeste': '#9370DB',
+    'Sul': '#BA55D3',
+    'Centro-Oeste': '#DA70D6'
 }
 
 # ===============================================================
-# FUNÇÕES DE CARREGAMENTO (MANTIDAS)
+# FUNÇÕES DE CARREGAMENTO (SIMPLIFICADAS E SEGURAS)
 # ===============================================================
 
 @st.cache_data
@@ -94,12 +83,24 @@ def carregar_dados_nacionais():
         gni_pc_br['GNI_per_Capita'] = pd.to_numeric(gni_pc_br['GNI_per_Capita'], errors='coerce')
         gni_pc_br = gni_pc_br[['Year', 'GNI_per_Capita']].dropna()
 
+        # Dados Gini do Banco Mundial
         gini_url = "https://api.worldbank.org/v2/country/BR/indicator/SI.POV.GINI?format=json&per_page=100"
-        gini_data = requests.get(gini_url, timeout=30).json()[1]
-        gini_df = pd.DataFrame([{'Year': int(item['date']), 'Gini': float(item['value'])} for item in gini_data if item['value'] is not None])
+        response = requests.get(gini_url, timeout=30)
+        gini_data = response.json()
         
+        gini_records = []
+        if len(gini_data) > 1:
+            for item in gini_data[1]:
+                if item.get('value') is not None:
+                    gini_records.append({
+                        'Year': int(item['date']),
+                        'Gini': float(item['value'])
+                    })
+        
+        gini_df = pd.DataFrame(gini_records)
         dados_nacionais = pd.merge(gni_pc_br, gini_df, on='Year', how='left')
         return dados_nacionais.sort_values('Year').reset_index(drop=True)
+        
     except Exception as e:
         st.error(f"Erro ao carregar dados nacionais: {e}")
         return pd.DataFrame()
@@ -112,7 +113,7 @@ def carregar_dados_estaduais():
         df_estados = pd.read_csv(url_dados_estaduais)
         return df_estados
     except Exception as e:
-        st.error(f"Erro ao carregar dados estaduais do GitHub: {e}")
+        st.error(f"Erro ao carregar dados estaduais: {e}")
         return pd.DataFrame()
 
 # ===============================================================
@@ -151,11 +152,10 @@ with st.sidebar:
     
     if not df_estados.empty:
         anos_disponiveis = sorted(df_estados['Ano'].unique())
-        ano_selecionado = st.slider(
+        ano_selecionado = st.selectbox(
             "**📅 Selecione o ano:**",
-            min_value=min(anos_disponiveis),
-            max_value=max(anos_disponiveis),
-            value=max(anos_disponiveis),
+            options=anos_disponiveis,
+            index=len(anos_disponiveis)-1,
             help="Analise a evolução ano a ano"
         )
 
@@ -179,11 +179,11 @@ with st.sidebar:
                 estado_mais_pobre = df_filtrado.loc[df_filtrado['PIB_per_Capita'].idxmin()]
                 estado_mais_igual = df_filtrado.loc[df_filtrado['Gini'].idxmin()]
                 
-                st.metric("🏆 Maior PIB per Capita", f"{estado_mais_rico['Estado']}", f"R$ {estado_mais_rico['PIB_per_Capita']:,.0f}")
-                st.metric("📊 Menor Desigualdade", f"{estado_mais_igual['Estado']}", f"Gini: {estado_mais_igual['Gini']:.3f}")
+                st.metric("🏆 Maior PIB", estado_mais_rico['Estado'], f"R$ {estado_mais_rico['PIB_per_Capita']:,.0f}")
+                st.metric("⚖️ Mais Igual", estado_mais_igual['Estado'], f"Gini: {estado_mais_igual['Gini']:.3f}")
                 
                 disparidade = estado_mais_rico['PIB_per_Capita'] / estado_mais_pobre['PIB_per_Capita']
-                st.metric("⚖️ Disparidade Regional", f"{disparidade:.1f}x", "Rico vs Pobre")
+                st.metric("📏 Disparidade", f"{disparidade:.1f}x")
 
 # ===============================================================
 # LAYOUT PRINCIPAL COM ABAS
@@ -233,57 +233,43 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
         
-        # GRÁFICO NACIONAL MELHORADO
+        # GRÁFICO NACIONAL SIMPLIFICADO E SEGURO
         fig_nacional = go.Figure()
         
-        # Área do GNI
+        # GNI
         fig_nacional.add_trace(go.Scatter(
             x=dados_nacionais['Year'], 
             y=dados_nacionais['GNI_per_Capita'],
             name='GNI per Capita',
             line=dict(color=CORES_ROXO['roxo_medio'], width=4),
             fill='tozeroy',
-            fillcolor='rgba(138, 43, 226, 0.1)',
-            hovertemplate='<b>Ano: %{x}</b><br>GNI: US$ %{y:,.0f}<extra></extra>'
+            fillcolor='rgba(138, 43, 226, 0.1)'
         ))
         
-        # Linha do Gini
-        fig_nacional.add_trace(go.Scatter(
-            x=dados_nacionais['Year'], 
-            y=dados_nacionais['Gini'],
-            name='Índice de Gini',
-            line=dict(color='#FF6B6B', width=4, dash='dot'),
-            yaxis='y2',
-            hovertemplate='<b>Ano: %{x}</b><br>Gini: %{y:.3f}<extra></extra>'
-        ))
+        # Gini (se disponível)
+        if 'Gini' in dados_nacionais.columns:
+            fig_nacional.add_trace(go.Scatter(
+                x=dados_nacionais['Year'], 
+                y=dados_nacionais['Gini'],
+                name='Índice de Gini',
+                line=dict(color='#FF6B6B', width=4, dash='dot'),
+                yaxis='y2'
+            ))
         
+        # Layout simplificado
         fig_nacional.update_layout(
-            title='<b>EVOLUÇÃO DO CRESCIMENTO E DESIGUALDADE NO BRASIL (1990-2023)</b>',
+            title='EVOLUÇÃO DO CRESCIMENTO E DESIGUALDADE NO BRASIL (1990-2023)',
             xaxis_title='Ano',
-            yaxis=dict(
-                title='GNI per Capita (US$ PPP)',
-                titlefont=dict(color=CORES_ROXO['roxo_medio']),
-                tickfont=dict(color=CORES_ROXO['roxo_medio'])
-            ),
+            yaxis_title='GNI per Capita (US$ PPP)',
             yaxis2=dict(
                 title='Índice de Gini',
-                titlefont=dict(color='#FF6B6B'),
-                tickfont=dict(color='#FF6B6B'),
                 overlaying='y',
                 side='right',
                 showgrid=False
             ),
             template='plotly_white',
             height=500,
-            hovermode='x unified',
-            legend=dict(
-                orientation="h",
-                yanchor="bottom",
-                y=1.02,
-                xanchor="right",
-                x=1
-            ),
-            plot_bgcolor='rgba(248,247,255,0.5)'
+            hovermode='x unified'
         )
         
         st.plotly_chart(fig_nacional, use_container_width=True)
@@ -292,16 +278,16 @@ with tab1:
         st.markdown("""
         <div class="explanation-box">
             <h4>🎯 O QUE ESTE GRÁFICO NOS REVELA?</h4>
-            <p><strong>Padrão de Crescimento Inclusivo:</strong> A correlação negativa de -0.428 indica que, historicamente, 
-            quando a economia brasileira cresce, a desigualdade tende a diminuir. Isso é um sinal positivo para o desenvolvimento sustentável.</p>
+            <p><strong>Padrão de Crescimento Inclusivo:</strong> A correlação negativa de {:.3f} indica que, historicamente, 
+            quando a economia brasileira cresce, a desigualdade tende a diminuir.</p>
             
             <p><strong>Períodos de Transformação:</strong> Observe como a desigualdade caiu significativamente entre 2001-2014, 
-            período marcado por políticas sociais e crescimento econômico. Já a partir de 2015, enfrentamos desafios com a crise econômica.</p>
+            período marcado por políticas sociais e crescimento econômico.</p>
             
             <p><strong>Conclusão:</strong> O Brasil demonstra que é possível conciliar crescimento com redução de desigualdades, 
-            mas isso requer políticas consistentes e um ambiente econômico favorável.</p>
+            mas isso requer políticas consistentes.</p>
         </div>
-        """, unsafe_allow_html=True)
+        """.format(correlacao), unsafe_allow_html=True)
 
 # ===============================================================
 # ABA 2: ANÁLISE ESTADUAL
@@ -313,11 +299,10 @@ with tab2:
         df_filtrado = df_estados[(df_estados['Ano'] == ano_selecionado) & (df_estados['Regiao'].isin(regioes_selecionadas))]
         
         if not df_filtrado.empty:
-            # LAYOUT EM COLUNAS PARA OS GRÁFICOS
+            # LAYOUT EM COLUNAS
             col1, col2 = st.columns(2)
             
             with col1:
-                # GRÁFICO DE BARRAS HORIZONTAIS - PIB
                 st.markdown("#### 💰 RANKING DE RIQUEZA ESTADUAL")
                 
                 df_ranking_pib = df_filtrado.sort_values('PIB_per_Capita', ascending=True)
@@ -327,38 +312,24 @@ with tab2:
                     x='PIB_per_Capita',
                     color='Regiao',
                     color_discrete_map=CORES_REGIOES,
-                    title=f'<b>PIB PER CAPITA POR ESTADO ({ano_selecionado})</b>',
+                    title=f'PIB PER CAPITA POR ESTADO ({ano_selecionado})',
                     labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Estado': ''},
-                    height=500,
-                    template='plotly_white',
-                    hover_data={'Gini': ':.3f', 'Regiao': True}
+                    height=500
                 )
-                
-                fig_pib.update_layout(
-                    showlegend=True,
-                    plot_bgcolor='rgba(248,247,255,0.5)',
-                    yaxis={'categoryorder': 'total ascending'}
-                )
-                
                 st.plotly_chart(fig_pib, use_container_width=True)
                 
-                # EXPLICAÇÃO PIB
                 st.markdown("""
                 <div class="explanation-box">
                     <h4>📊 INTERPRETANDO A RIQUEZA ESTADUAL</h4>
-                    <p><strong>Distrito Federal como Outlier:</strong> A capital federal lidera com folga devido à concentração 
-                    de serviços públicos e alta renda dos funcionários públicos.</p>
+                    <p><strong>Distrito Federal como Outlier:</strong> A capital federal lidera devido à concentração 
+                    de serviços públicos e alta renda.</p>
                     
-                    <p><strong>Padrão Regional:</strong> Observe como estados do <strong>Centro-Oeste e Sul</strong> tendem a ter 
+                    <p><strong>Padrão Regional:</strong> Estados do <strong>Centro-Oeste e Sul</strong> tendem a ter 
                     PIBs mais altos, enquanto <strong>Nordeste</strong> concentra os menores valores.</p>
-                    
-                    <p><strong>Desafio do Desenvolvimento:</strong> A diferença de 10.6x entre o mais rico e o mais pobre 
-                    revela a necessidade de políticas regionais específicas.</p>
                 </div>
                 """, unsafe_allow_html=True)
             
             with col2:
-                # GRÁFICO DE BARRAS HORIZONTAIS - GINI
                 st.markdown("#### ⚖️ RANKING DE DESIGUALDADE")
                 
                 df_ranking_gini = df_filtrado.sort_values('Gini', ascending=False)
@@ -368,37 +339,23 @@ with tab2:
                     x='Gini',
                     color='Regiao',
                     color_discrete_map=CORES_REGIOES,
-                    title=f'<b>ÍNDICE DE GINI POR ESTADO ({ano_selecionado})</b>',
+                    title=f'ÍNDICE DE GINI POR ESTADO ({ano_selecionado})',
                     labels={'Gini': 'Índice de Gini', 'Estado': ''},
-                    height=500,
-                    template='plotly_white',
-                    hover_data={'PIB_per_Capita': ':,.0f', 'Regiao': True}
+                    height=500
                 )
-                
-                fig_gini.update_layout(
-                    showlegend=True,
-                    plot_bgcolor='rgba(248,247,255,0.5)',
-                    yaxis={'categoryorder': 'total descending'}
-                )
-                
                 st.plotly_chart(fig_gini, use_container_width=True)
                 
-                # EXPLICAÇÃO GINI
                 st.markdown("""
                 <div class="explanation-box">
                     <h4>🎯 ENTENDENDO A DESIGUALDADE ESTADUAL</h4>
-                    <p><strong>Santa Catarina como Modelo:</strong> Com Gini de 0.418, é referência nacional em igualdade, 
-                    combinando desenvolvimento econômico com distribuição de renda.</p>
-                    
-                    <p><strong>Surpresa do Norte:</strong> Estados como Rondônia mostram que é possível ter relativa igualdade 
-                    mesmo em regiões menos desenvolvidas economicamente.</p>
+                    <p><strong>Santa Catarina como Modelo:</strong> Com Gini de 0.418, é referência nacional em igualdade.</p>
                     
                     <p><strong>Desafio Nordestino:</strong> A região precisa enfrentar desigualdades históricas através de 
                     políticas educacionais e de geração de emprego.</p>
                 </div>
                 """, unsafe_allow_html=True)
             
-            # GRÁFICO DE DISPERSÃO INTERATIVO
+            # GRÁFICO DE DISPERSÃO
             st.markdown("---")
             st.markdown("#### 🔗 RELAÇÃO ENTRE RIQUEZA E DESIGUALDADE")
             
@@ -409,52 +366,22 @@ with tab2:
                 color='Regiao',
                 size='PIB_per_Capita',
                 color_discrete_map=CORES_REGIOES,
-                title=f'<b>PIB vs DESIGUALDADE: ANÁLISE DE RELAÇÃO ({ano_selecionado})</b>',
+                title=f'PIB vs DESIGUALDADE: ANÁLISE DE RELAÇÃO ({ano_selecionado})',
                 labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Gini': 'Índice de Gini'},
                 hover_name='Estado',
-                template='plotly_white',
                 size_max=40
-            )
-            
-            # Adicionar linha de tendência
-            fig_scatter.update_traces(
-                marker=dict(opacity=0.7, line=dict(width=1, color='DarkSlateGrey'))
-            )
-            
-            # Adicionar quadrantes explicativos
-            pib_medio = df_filtrado['PIB_per_Capita'].mean()
-            gini_medio = df_filtrado['Gini'].mean()
-            
-            fig_scatter.add_hline(y=gini_medio, line_dash="dash", line_color="gray", opacity=0.7)
-            fig_scatter.add_vline(x=pib_medio, line_dash="dash", line_color="gray", opacity=0.7)
-            
-            fig_scatter.update_layout(
-                height=600,
-                plot_bgcolor='rgba(248,247,255,0.5)',
-                showlegend=True
             )
             
             st.plotly_chart(fig_scatter, use_container_width=True)
             
-            # EXPLICAÇÃO DO SCATTER PLOT
             st.markdown("""
             <div class="explanation-box">
-                <h4>🎪 MAPA DE RELAÇÕES: ONDE CADA ESTADO SE ENCAIXA?</h4>
+                <h4>🎪 MAPA DE RELAÇÕES</h4>
+                <p><strong>Quadrante Ideal:</strong> Estados com <strong>alto PIB e baixa desigualdade</strong> 
+                (inferior direito) - modelo a ser seguido.</p>
                 
-                <p><strong>Quadrante Ideal (Inferior Direito):</strong> Estados com <strong>alto PIB e baixa desigualdade</strong>. 
-                Exemplo: Santa Catarina - o modelo a ser seguido.</p>
-                
-                <p><strong>Quadrante de Desafio (Superior Esquerdo):</strong> Estados com <strong>baixo PIB e alta desigualdade</strong>. 
-                Exemplo: Maranhão - necessidade de políticas urgentes.</p>
-                
-                <p><strong>Quadrante de Oportunidade (Inferior Esquerdo):</strong> Estados com <strong>baixo PIB mas relativa igualdade</strong>. 
-                Podem crescer mantendo a distribuição.</p>
-                
-                <p><strong>Quadrante de Concentração (Superior Direito):</strong> Estados <strong>ricos mas desiguais</strong>. 
-                Precisam melhorar a distribuição dos ganhos.</p>
-                
-                <p><strong>Conclusão:</strong> O objetivo é mover todos os estados para o quadrante inferior direito - 
-                <strong>ricos e igualitários</strong>.</p>
+                <p><strong>Quadrante de Desafio:</strong> Estados com <strong>baixo PIB e alta desigualdade</strong> 
+                (superior esquerdo) - necessidade de políticas urgentes.</p>
             </div>
             """, unsafe_allow_html=True)
 
@@ -471,21 +398,11 @@ with tab3:
         <div class="explanation-box">
             <h3>✅ DESCOBERTAS PRINCIPAIS</h3>
             
-            <h4>📈 Crescimento Inclusivo</h4>
-            <p>O Brasil apresenta correlação negativa entre crescimento e desigualdade (-0.428), 
-            indicando que o desenvolvimento econômico tem beneficiado os mais pobres.</p>
+            <p><strong>📈 Crescimento Inclusivo:</strong> Brasil apresenta correlação negativa entre crescimento e desigualdade.</p>
             
-            <h4>🗺️ Desafios Regionais</h4>
-            <p>Disparidade de 10.6x entre estados mais rico e mais pobre revela necessidade de 
-            políticas regionais específicas.</p>
+            <p><strong>🗺️ Desafios Regionais:</strong> Disparidade de 10.6x entre estados mais rico e mais pobre.</p>
             
-            <h4>🏆 Modelos de Sucesso</h4>
-            <p>Santa Catarina combina alto desenvolvimento com baixa desigualdade (Gini 0.418), 
-            servindo de referência nacional.</p>
-            
-            <h4>⚖️ Nordeste Prioritário</h4>
-            <p>Região concentra os maiores desafios, exigindo atenção especial em políticas 
-            redistributivas.</p>
+            <p><strong>🏆 Modelos de Sucesso:</strong> Santa Catarina combina desenvolvimento com baixa desigualdade.</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -494,21 +411,11 @@ with tab3:
         <div class="explanation-box">
             <h3>💡 RECOMENDAÇÕES ESTRATÉGICAS</h3>
             
-            <h4>🎯 Políticas Regionais</h4>
-            <p>Desenvolver estratégias específicas para cada contexto estadual e regional, 
-            reconhecendo as diferentes realidades.</p>
+            <p><strong>🎯 Políticas Regionais:</strong> Estratégias específicas para cada contexto.</p>
             
-            <h4>📚 Educação e Capacitação</h4>
-            <p>Investir massivamente em educação nas regiões menos desenvolvidas para 
-            quebrar ciclos de desigualdade.</p>
+            <p><strong>📚 Educação:</strong> Investir em regiões menos desenvolvidas.</p>
             
-            <h4>🏗️ Infraestrutura Regional</h4>
-            <p>Direcionar investimentos em infraestrutura para estados com menor desenvolvimento 
-            econômico.</p>
-            
-            <h4>📊 Monitoramento Contínuo</h4>
-            <p>Manter sistema de acompanhamento dos indicadores de desigualdade para 
-            ajustar políticas quando necessário.</p>
+            <p><strong>🏗️ Infraestrutura:</strong> Direcionar investimentos para estados pobres.</p>
         </div>
         """, unsafe_allow_html=True)
     
@@ -517,9 +424,7 @@ with tab3:
     <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center; margin-top: 2rem;'>
         <h2>🎓 CONCLUSÃO FINAL</h2>
         <p style='font-size: 1.2rem;'>
-        O Brasil demonstra que <strong>crescimento econômico e redução de desigualdades podem caminhar juntos</strong>. 
-        No entanto, os desafios regionais históricos exigem <strong>políticas persistentes e bem direcionadas</strong> 
-        para alcançarmos um desenvolvimento verdadeiramente sustentável e inclusivo.
+        O Brasil demonstra que <strong>crescimento econômico e redução de desigualdades podem caminhar juntos</strong>.
         </p>
     </div>
     """, unsafe_allow_html=True)
@@ -530,7 +435,6 @@ with tab3:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; font-size: 0.9rem;'>
-    <p><strong>Análise ODS Brasil</strong> | Dados: UNDP, Banco Mundial, IBGE | Desenvolvido para análise acadêmica</p>
-    <p>ODS 8 - Crescimento Econômico | ODS 10 - Redução das Desigualdades</p>
+    <p><strong>Análise ODS Brasil</strong> | Dados: UNDP, Banco Mundial, IBGE</p>
 </div>
 """, unsafe_allow_html=True)

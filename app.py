@@ -1,35 +1,20 @@
-
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
 import requests
-import warnings
 import streamlit as st
 
-warnings.filterwarnings('ignore')
-
-# Configuração da página do Streamlit
-st.set_page_config(layout="wide", page_title="Análise ODS: Crescimento vs Desigualdade")
+# Configuração da página do Streamlit - DEVE SER O PRIMEIRO COMANDO
+st.set_page_config(layout="wide", page_title="Análise ODS Brasil")
 
 # ===============================================================
-# TÍTULO E INTRODUÇÃO
-# ===============================================================
-st.title("📊 Análise ODS: Crescimento Econômico vs. Desigualdade no Brasil")
-st.markdown("""
-Esta aplicação analisa a relação entre o **Crescimento Econômico (ODS 8)** e a **Redução das Desigualdades (ODS 10)** no Brasil.
-Os dados nacionais são obtidos do PNUD e Banco Mundial, enquanto os dados estaduais vêm de uma base de dados consolidada do IBGE hospedada no GitHub.
-""")
-
-# ===============================================================
-# FUNÇÕES DE CARREGAMENTO DE DADOS (COM CACHE)
+# FUNÇÕES DE CARREGAMENTO DE DADOS (COM CACHE PARA VELOCIDADE)
 # ===============================================================
 
-# O @st.cache_data garante que os dados sejam carregados apenas uma vez.
 @st.cache_data
 def carregar_dados_nacionais():
     """Carrega e combina os dados nacionais."""
     try:
-        # GNI do UNDP
         brasil_data_url = "https://github.com/leticiaborsaro/trabalho_dados/blob/main/Brazil.csv?raw=true"
         brasil_data = pd.read_csv(brasil_data_url)
         gni_pc_br = brasil_data[brasil_data['key'].str.contains("Gross National Income", na=False)].copy()
@@ -38,22 +23,11 @@ def carregar_dados_nacionais():
         gni_pc_br['GNI_per_Capita'] = pd.to_numeric(gni_pc_br['GNI_per_Capita'], errors='coerce')
         gni_pc_br = gni_pc_br[['Year', 'GNI_per_Capita']].dropna()
 
-        # Gini e Desemprego do Banco Mundial
         gini_url = "https://api.worldbank.org/v2/country/BR/indicator/SI.POV.GINI?format=json&per_page=100"
-        desemprego_url = "https://api.worldbank.org/v2/country/BR/indicator/SL.UEM.TOTL.ZS?format=json&per_page=100"
-        
         gini_data = requests.get(gini_url, timeout=30).json()[1]
-        desemprego_data = requests.get(desemprego_url, timeout=30).json()[1]
-        
         gini_df = pd.DataFrame([{'Year': int(item['date']), 'Gini': float(item['value'])} for item in gini_data if item['value'] is not None])
-        desemprego_df = pd.DataFrame([{'Year': int(item['date']), 'Desemprego': float(item['value'])} for item in desemprego_data if item['value'] is not None])
-
-        # Merge
+        
         dados_nacionais = pd.merge(gni_pc_br, gini_df, on='Year', how='left')
-        
-        ### ESTA É A LINHA QUE FOI CORRIGIDA ###
-        dados_nacionais = pd.merge(dados_nacionais, desemprego_df, on='Year', how='left')
-        
         return dados_nacionais.sort_values('Year').reset_index(drop=True)
     except Exception as e:
         st.error(f"Erro ao carregar dados nacionais: {e}")
@@ -74,74 +48,141 @@ def carregar_dados_estaduais():
 dados_nacionais = carregar_dados_nacionais()
 df_estados = carregar_dados_estaduais()
 
+# ===============================================================
+# TÍTULO PRINCIPAL E INTRODUÇÃO
+# ===============================================================
+st.title("📊 Análise ODS: Crescimento Econômico vs. Desigualdade no Brasil")
+st.markdown("""
+Esta aplicação interativa analisa a relação entre o **Crescimento Econômico (ODS 8)** e a **Redução das Desigualdades (ODS 10)** no Brasil. 
+Explore os dados nacionais e as realidades distintas dos estados brasileiros utilizando os filtros na barra lateral.
+""")
 
 # ===============================================================
-# ANÁLISE NACIONAL
+# BARRA LATERAL COM FILTROS INTERATIVOS
 # ===============================================================
-st.header("1. Análise Nacional: A Visão Geral do Brasil")
-
-if not dados_nacionais.empty:
-    dados_corr = dados_nacionais[['GNI_per_Capita', 'Gini']].dropna()
-    correlacao = dados_corr['GNI_per_Capita'].corr(dados_corr['Gini'])
-    
-    col1, col2 = st.columns([1, 2]) # Dando mais espaço para o gráfico
-    with col1:
-        st.metric(label="Correlação (GNI per Capita vs. Gini)", value=f"{correlacao:.3f}")
-        if correlacao < -0.3:
-            st.success("Tendência de Crescimento Inclusivo: Historicamente, o aumento da renda esteve associado a uma redução da desigualdade.")
-        else:
-            st.warning("Relação Fraca ou Neutra: Crescimento econômico por si só não foi um fator determinante para a trajetória da desigualdade.")
-
-    with col2:
-        fig4 = go.Figure()
-        fig4.add_trace(go.Scatter(x=dados_nacionais['Year'], y=dados_nacionais['GNI_per_Capita'], name='GNI per Capita', line=dict(color='#1f77b4', width=3)))
-        fig4.add_trace(go.Scatter(x=dados_nacionais['Year'], y=dados_nacionais['Gini'], name='Índice de Gini', yaxis='y2', line=dict(color='#d62728', width=3)))
-        fig4.update_layout(
-            title='<b>Evolução do Crescimento e Desigualdade no Brasil</b>',
-            yaxis=dict(title='GNI per Capita (US$ PPP)'),
-            yaxis2=dict(title='Índice de Gini', overlaying='y', side='right', showgrid=False),
-            legend=dict(x=0.01, y=0.99, xanchor="left", yanchor="top"),
-            margin=dict(l=40, r=40, t=40, b=40)
-        )
-        st.plotly_chart(fig4, use_container_width=True)
-
-# ===============================================================
-# ANÁLISE ESTADUAL
-# ===============================================================
-st.header("2. Análise Estadual: As Diferentes Realidades do Brasil")
+st.sidebar.header("⚙️ Filtros Interativos")
 
 if not df_estados.empty:
-    # --- Barra lateral com filtros ---
-    st.sidebar.header("Filtros Interativos")
     anos_disponiveis = sorted(df_estados['Ano'].unique())
     ano_selecionado = st.sidebar.slider(
-        "Selecione o ano para o Ranking Estadual:",
+        "Selecione o ano para a análise estadual:",
         min_value=min(anos_disponiveis),
         max_value=max(anos_disponiveis),
         value=max(anos_disponiveis)
     )
-    df_filtrado = df_estados[df_estados['Ano'] == ano_selecionado]
 
-    # --- Análise Estadual ---
-    col1, col2 = st.columns(2)
-    with col1:
-        st.subheader(f"Ranking de PIB per Capita ({ano_selecionado})")
-        df_ranking_pib = df_filtrado.sort_values('PIB_per_Capita', ascending=True)
-        fig2 = px.bar(df_ranking_pib, y='Estado', x='PIB_per_Capita', color='Regiao',
-                      title=f'<b>PIB per Capita por Estado ({ano_selecionado})</b>',
-                      labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Estado': ''},
-                      height=600, template='plotly_white')
-        st.plotly_chart(fig2, use_container_width=True)
+    regioes_disponiveis = sorted(df_estados['Regiao'].unique())
+    regioes_selecionadas = st.sidebar.multiselect(
+        "Selecione as regiões para visualizar:",
+        options=regioes_disponiveis,
+        default=regioes_disponiveis
+    )
+
+    # Filtrar os dados com base nos filtros da barra lateral
+    if regioes_selecionadas:
+        df_filtrado = df_estados[(df_estados['Ano'] == ano_selecionado) & (df_estados['Regiao'].isin(regioes_selecionadas))]
+    else: # Caso o usuário desmarque todas as regiões
+        df_filtrado = pd.DataFrame()
+
+    # --- KPIs DINÂMICOS NA BARRA LATERAL ---
+    st.sidebar.markdown("---")
+    st.sidebar.subheader(f"Resumo para {ano_selecionado}")
+    if not df_filtrado.empty:
+        estado_mais_rico = df_filtrado.loc[df_filtrado['PIB_per_Capita'].idxmax()]
+        estado_mais_pobre = df_filtrado.loc[df_filtrado['PIB_per_Capita'].idxmin()]
+        disparidade = estado_mais_rico['PIB_per_Capita'] / estado_mais_pobre['PIB_per_Capita']
+        
+        st.sidebar.metric(label="Estado com Maior PIB per Capita", value=estado_mais_rico['Estado'])
+        st.sidebar.metric(label="Estado com Menor PIB per Capita", value=estado_mais_pobre['Estado'])
+        st.sidebar.metric(label="Disparidade Econômica", value=f"{disparidade:.1f}x")
+    else:
+        st.sidebar.warning("Selecione ao menos uma região.")
+
+# ===============================================================
+# LAYOUT COM ABAS
+# ===============================================================
+tab1, tab2 = st.tabs(["🌎 Análise Nacional", "🗺️ Análise Estadual Detalhada"])
+
+# --- CONTEÚDO DA ABA 1: ANÁLISE NACIONAL ---
+with tab1:
+    st.header("A Visão Geral do Brasil (1990-2023)")
     
-    with col2:
-        st.subheader(f"Relação PIB vs. Desigualdade ({ano_selecionado})")
-        fig3 = px.scatter(df_filtrado, x='PIB_per_Capita', y='Gini',
-                          color='Regiao', size='PIB_per_Capita',
-                          title=f'<b>PIB per Capita vs. Gini por Estado ({ano_selecionado})</b>',
-                          labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Gini': 'Índice de Gini'},
-                          hover_data=['Estado'],
-                          height=600, template='plotly_white')
-        st.plotly_chart(fig3, use_container_width=True)
+    if not dados_nacionais.empty:
+        dados_corr = dados_nacionais[['GNI_per_Capita', 'Gini']].dropna()
+        correlacao = dados_corr['GNI_per_Capita'].corr(dados_corr['Gini'])
+        
+        st.info(f"**Correlação Nacional (GNI per Capita vs. Gini): {correlacao:.3f}**")
+        if correlacao < -0.3:
+            st.markdown("📈 **Interpretação:** Historicamente, o Brasil apresentou um padrão de **crescimento inclusivo**, onde o aumento da renda esteve associado a uma moderada redução da desigualdade.")
+        else:
+            st.markdown("↔️ **Interpretação:** A relação entre crescimento e desigualdade é fraca, sugerindo que outros fatores, como políticas públicas, são mais determinantes para a distribuição de renda.")
 
-else:
-    st.warning("Não foi possível carregar os dados estaduais para a análise.")
+        # Gráfico de evolução nacional
+        fig_nacional = go.Figure()
+        fig_nacional.add_trace(go.Scatter(x=dados_nacionais['Year'], y=dados_nacionais['GNI_per_Capita'], name='GNI per Capita', line=dict(color='royalblue', width=3)))
+        fig_nacional.add_trace(go.Scatter(x=dados_nacionais['Year'], y=dados_nacionais['Gini'], name='Índice de Gini', yaxis='y2', line=dict(color='firebrick', width=3)))
+        fig_nacional.update_layout(
+            title='<b>Evolução do Crescimento Econômico e Desigualdade no Brasil</b>',
+            yaxis=dict(title='GNI per Capita (US$ PPP)'),
+            yaxis2=dict(title='Índice de Gini', overlaying='y', side='right', showgrid=False),
+            legend=dict(x=0.01, y=0.99, xanchor="left", yanchor="top", bgcolor='rgba(255,255,255,0.6)'),
+            template='plotly_white',
+            hovermode='x unified'
+        )
+        st.plotly_chart(fig_nacional, use_container_width=True)
+
+# --- CONTEÚDO DA ABA 2: ANÁLISE ESTADUAL ---
+with tab2:
+    st.header(f"As Diferentes Realidades do Brasil em {ano_selecionado}")
+
+    if not df_filtrado.empty:
+        # Paleta de cores para as regiões
+        cores_regioes = {
+            'Norte': '#2ca02c',       # Verde
+            'Nordeste': '#ff7f0e',    # Laranja
+            'Sudeste': '#d62728',     # Vermelho
+            'Sul': '#1f77b4',         # Azul
+            'Centro-Oeste': '#9467bd' # Roxo
+        }
+
+        col1, col2 = st.columns(2)
+        with col1:
+            st.subheader("Ranking de Riqueza (PIB per Capita)")
+            df_ranking_pib = df_filtrado.sort_values('PIB_per_Capita', ascending=True)
+            fig_pib = px.bar(
+                df_ranking_pib, y='Estado', x='PIB_per_Capita', color='Regiao',
+                title=f'<b>PIB per Capita por Estado ({ano_selecionado})</b>',
+                labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Estado': ''},
+                height=600, template='plotly_white', color_discrete_map=cores_regioes,
+                hover_data={'Gini': ':.3f'} # Adiciona Gini no hover
+            )
+            st.plotly_chart(fig_pib, use_container_width=True)
+        
+        with col2:
+            st.subheader("Ranking de Desigualdade (Gini)")
+            df_ranking_gini = df_filtrado.sort_values('Gini', ascending=False)
+            fig_gini = px.bar(
+                df_ranking_gini, y='Estado', x='Gini', color='Regiao',
+                title=f'<b>Índice de Gini por Estado ({ano_selecionado})</b>',
+                labels={'Gini': 'Índice de Gini', 'Estado': ''},
+                height=600, template='plotly_white', color_discrete_map=cores_regioes,
+                hover_data={'PIB_per_Capita': ':,.0f'} # Adiciona PIB no hover
+            )
+            st.plotly_chart(fig_gini, use_container_width=True)
+            
+        st.markdown("---") # Linha divisória para dar espaço
+        
+        st.subheader(f"Análise de Correlação: Riqueza vs. Desigualdade ({ano_selecionado})")
+        fig_scatter = px.scatter(
+            df_filtrado, x='PIB_per_Capita', y='Gini',
+            color='Regiao', size='PIB_per_Capita',
+            title=f'<b>PIB per Capita vs. Gini por Estado ({ano_selecionado})</b>',
+            labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Gini': 'Índice de Gini'},
+            hover_name='Estado', # Mostra o nome do estado no hover
+            template='plotly_white',
+            color_discrete_map=cores_regioes
+        )
+        st.plotly_chart(fig_scatter, use_container_width=True)
+
+    else:
+        st.warning("Nenhum dado para exibir. Por favor, selecione ao menos uma região na barra lateral.")

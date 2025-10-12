@@ -1,3 +1,4 @@
+
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -49,7 +50,10 @@ def carregar_dados_nacionais():
 
         # Merge
         dados_nacionais = pd.merge(gni_pc_br, gini_df, on='Year', how='left')
-        dados_nacionais = pd.merge(dados_nacionais, desemprego_df, on='Year', ahow='left')
+        
+        ### ESTA É A LINHA QUE FOI CORRIGIDA ###
+        dados_nacionais = pd.merge(dados_nacionais, desemprego_df, on='Year', how='left')
+        
         return dados_nacionais.sort_values('Year').reset_index(drop=True)
     except Exception as e:
         st.error(f"Erro ao carregar dados nacionais: {e}")
@@ -80,7 +84,7 @@ if not dados_nacionais.empty:
     dados_corr = dados_nacionais[['GNI_per_Capita', 'Gini']].dropna()
     correlacao = dados_corr['GNI_per_Capita'].corr(dados_corr['Gini'])
     
-    col1, col2 = st.columns(2)
+    col1, col2 = st.columns([1, 2]) # Dando mais espaço para o gráfico
     with col1:
         st.metric(label="Correlação (GNI per Capita vs. Gini)", value=f"{correlacao:.3f}")
         if correlacao < -0.3:
@@ -96,7 +100,8 @@ if not dados_nacionais.empty:
             title='<b>Evolução do Crescimento e Desigualdade no Brasil</b>',
             yaxis=dict(title='GNI per Capita (US$ PPP)'),
             yaxis2=dict(title='Índice de Gini', overlaying='y', side='right', showgrid=False),
-            legend=dict(x=0.01, y=0.99)
+            legend=dict(x=0.01, y=0.99, xanchor="left", yanchor="top"),
+            margin=dict(l=40, r=40, t=40, b=40)
         )
         st.plotly_chart(fig4, use_container_width=True)
 
@@ -108,7 +113,7 @@ st.header("2. Análise Estadual: As Diferentes Realidades do Brasil")
 if not df_estados.empty:
     # --- Barra lateral com filtros ---
     st.sidebar.header("Filtros Interativos")
-    anos_disponiveis = sorted(df_estados['Ano'].unique(), reverse=True)
+    anos_disponiveis = sorted(df_estados['Ano'].unique())
     ano_selecionado = st.sidebar.slider(
         "Selecione o ano para o Ranking Estadual:",
         min_value=min(anos_disponiveis),
@@ -123,7 +128,7 @@ if not df_estados.empty:
         st.subheader(f"Ranking de PIB per Capita ({ano_selecionado})")
         df_ranking_pib = df_filtrado.sort_values('PIB_per_Capita', ascending=True)
         fig2 = px.bar(df_ranking_pib, y='Estado', x='PIB_per_Capita', color='Regiao',
-                      title=f'<b>Ranking de PIB per Capita por Estado ({ano_selecionado})</b>',
+                      title=f'<b>PIB per Capita por Estado ({ano_selecionado})</b>',
                       labels={'PIB_per_Capita': 'PIB per Capita (R$)', 'Estado': ''},
                       height=600, template='plotly_white')
         st.plotly_chart(fig2, use_container_width=True)

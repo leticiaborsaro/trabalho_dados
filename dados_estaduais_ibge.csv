@@ -1,0 +1,271 @@
+Estado,Ano,PIB_per_Capita,Gini,Regiao
+Rondônia,2012,19349.53,0.468,Norte
+Acre,2012,15159.98,0.536,Norte
+Amazonas,2012,20498.44,0.52,Norte
+Roraima,2012,19323.23,0.513,Norte
+Pará,2012,12437.1,0.53,Norte
+Amapá,2012,16187.16,0.51,Norte
+Tocantins,2012,15839.29,0.499,Norte
+Maranhão,2012,8760.37,0.548,Nordeste
+Piauí,2012,9642.03,0.563,Nordeste
+Ceará,2012,12563.48,0.556,Nordeste
+Rio Grande do Norte,2012,13611.26,0.548,Nordeste
+Paraíba,2012,11843.18,0.565,Nordeste
+Pernambuco,2012,14217.15,0.559,Nordeste
+Alagoas,2012,11041.01,0.559,Nordeste
+Sergipe,2012,15309.28,0.533,Nordeste
+Bahia,2012,13583.56,0.566,Nordeste
+Minas Gerais,2012,22353.4,0.505,Sudeste
+Espírito Santo,2012,30424.81,0.513,Sudeste
+Rio de Janeiro,2012,33816.32,0.545,Sudeste
+São Paulo,2012,37133.02,0.508,Sudeste
+Paraná,2012,28240.23,0.478,Sul
+Santa Catarina,2012,30602.89,0.449,Sul
+Rio Grande do Sul,2012,30661.16,0.495,Sul
+Mato Grosso do Sul,2012,27692.65,0.504,Centro-Oeste
+Mato Grosso,2012,29323.7,0.502,Centro-Oeste
+Goiás,2012,22822.09,0.493,Centro-Oeste
+Distrito Federal,2012,64653.34,0.584,Centro-Oeste
+Rondônia,2013,21471.21,0.473,Norte
+Acre,2013,16327.84,0.503,Norte
+Amazonas,2013,22097.63,0.518,Norte
+Roraima,2013,20608.6,0.492,Norte
+Pará,2013,13915.2,0.536,Norte
+Amapá,2013,17154.54,0.5,Norte
+Tocantins,2013,17298.67,0.499,Norte
+Maranhão,2013,9474.34,0.534,Nordeste
+Piauí,2013,10452.1,0.548,Nordeste
+Ceará,2013,13627.52,0.541,Nordeste
+Rio Grande do Norte,2013,14619.67,0.525,Nordeste
+Paraíba,2013,12841.67,0.538,Nordeste
+Pernambuco,2013,15509.84,0.551,Nordeste
+Alagoas,2013,11848.4,0.553,Nordeste
+Sergipe,2013,16670.62,0.518,Nordeste
+Bahia,2013,14691.31,0.548,Nordeste
+Minas Gerais,2013,24083.56,0.492,Sudeste
+Espírito Santo,2013,32178.29,0.515,Sudeste
+Rio de Janeiro,2013,36563.02,0.54,Sudeste
+São Paulo,2013,39373.18,0.513,Sudeste
+Paraná,2013,30601.59,0.473,Sul
+Santa Catarina,2013,32745.3,0.443,Sul
+Rio Grande do Sul,2013,32881.33,0.484,Sul
+Mato Grosso do Sul,2013,29938.82,0.491,Centro-Oeste
+Mato Grosso,2013,33171.65,0.495,Centro-Oeste
+Goiás,2013,24867.73,0.485,Centro-Oeste
+Distrito Federal,2013,67011.02,0.569,Centro-Oeste
+Rondônia,2014,23157.04,0.465,Norte
+Acre,2014,17143.51,0.495,Norte
+Amazonas,2014,23078.2,0.511,Norte
+Roraima,2014,21971.0,0.488,Norte
+Pará,2014,14811.3,0.523,Norte
+Amapá,2014,18023.7,0.486,Norte
+Tocantins,2014,18413.75,0.485,Norte
+Maranhão,2014,10476.99,0.518,Nordeste
+Piauí,2014,11452.12,0.526,Nordeste
+Ceará,2014,14769.31,0.515,Nordeste
+Rio Grande do Norte,2014,15729.1,0.516,Nordeste
+Paraíba,2014,13915.22,0.526,Nordeste
+Pernambuco,2014,16751.34,0.536,Nordeste
+Alagoas,2014,12854.44,0.548,Nordeste
+Sergipe,2014,17822.42,0.52,Nordeste
+Bahia,2014,15833.4,0.536,Nordeste
+Minas Gerais,2014,25688.1,0.493,Sudeste
+Espírito Santo,2014,33177.34,0.509,Sudeste
+Rio de Janeiro,2014,37887.89,0.535,Sudeste
+São Paulo,2014,42197.83,0.513,Sudeste
+Paraná,2014,32829.35,0.478,Sul
+Santa Catarina,2014,35438.31,0.434,Sul
+Rio Grande do Sul,2014,34747.01,0.474,Sul
+Mato Grosso do Sul,2014,32306.91,0.485,Centro-Oeste
+Mato Grosso,2014,35742.67,0.505,Centro-Oeste
+Goiás,2014,26732.32,0.483,Centro-Oeste
+Distrito Federal,2014,70838.74,0.573,Centro-Oeste
+Rondônia,2015,22806.3,0.463,Norte
+Acre,2015,16671.18,0.51,Norte
+Amazonas,2015,22002.59,0.519,Norte
+Roraima,2015,22177.01,0.488,Norte
+Pará,2015,14619.67,0.518,Norte
+Amapá,2015,17929.54,0.504,Norte
+Tocantins,2015,18833.02,0.482,Norte
+Maranhão,2015,11216.91,0.53,Nordeste
+Piauí,2015,12151.05,0.548,Nordeste
+Ceará,2015,15725.29,0.536,Nordeste
+Rio Grande do Norte,2015,16147.28,0.54,Nordeste
+Paraíba,2015,14757.48,0.548,Nordeste
+Pernambuco,2015,17409.11,0.564,Nordeste
+Alagoas,2015,13490.54,0.562,Nordeste
+Sergipe,2015,18274.52,0.546,Nordeste
+Bahia,2015,16124.77,0.556,Nordeste
+Minas Gerais,2015,25527.27,0.502,Sudeste
+Espírito Santo,2015,31086.72,0.518,Sudeste
+Rio de Janeiro,2015,35832.06,0.545,Sudeste
+São Paulo,2015,40847.01,0.522,Sudeste
+Paraná,2015,32551.48,0.474,Sul
+Santa Catarina,2015,35293.75,0.448,Sul
+Rio Grande do Sul,2015,34316.51,0.485,Sul
+Mato Grosso do Sul,2015,32426.68,0.483,Centro-Oeste
+Mato Grosso,2015,36625.59,0.499,Centro-Oeste
+Goiás,2015,27010.51,0.485,Centro-Oeste
+Distrito Federal,2015,73971.05,0.58,Centro-Oeste
+Rondônia,2016,23075.72,0.471,Norte
+Acre,2016,16662.62,0.536,Norte
+Amazonas,2016,22216.51,0.546,Norte
+Roraima,2016,22891.86,0.506,Norte
+Pará,2016,14945.8,0.528,Norte
+Amapá,2016,18059.2,0.526,Norte
+Tocantins,2016,19520.15,0.5,Norte
+Maranhão,2016,11366.2,0.543,Nordeste
+Piauí,2016,12836.21,0.562,Nordeste
+Ceará,2016,16382.02,0.548,Nordeste
+Rio Grande do Norte,2016,16568.04,0.563,Nordeste
+Paraíba,2016,15516.48,0.564,Nordeste
+Pernambuco,2016,17934.39,0.573,Nordeste
+Alagoas,2016,13844.75,0.562,Nordeste
+Sergipe,2016,18386.67,0.546,Nordeste
+Bahia,2016,16349.9,0.569,Nordeste
+Minas Gerais,2016,26034.78,0.519,Sudeste
+Espírito Santo,2016,29559.88,0.527,Sudeste
+Rio de Janeiro,2016,34241.16,0.558,Sudeste
+São Paulo,2016,40698.83,0.534,Sudeste
+Paraná,2016,34091.22,0.485,Sul
+Santa Catarina,2016,36502.81,0.457,Sul
+Rio Grande do Sul,2016,34475.24,0.505,Sul
+Mato Grosso do Sul,2016,33503.73,0.497,Centro-Oeste
+Mato Grosso,2016,37803.95,0.518,Centro-Oeste
+Goiás,2016,27503.93,0.502,Centro-Oeste
+Distrito Federal,2016,73163.63,0.582,Centro-Oeste
+Rondônia,2017,24591.93,0.463,Norte
+Acre,2017,17316.27,0.535,Norte
+Amazonas,2017,23075.1,0.536,Norte
+Roraima,2017,24458.91,0.517,Norte
+Pará,2017,16104.97,0.53,Norte
+Amapá,2017,18721.28,0.529,Norte
+Tocantins,2017,20743.08,0.502,Norte
+Maranhão,2017,12263.68,0.54,Nordeste
+Piauí,2017,13735.0,0.559,Nordeste
+Ceará,2017,17538.3,0.553,Nordeste
+Rio Grande do Norte,2017,17540.23,0.559,Nordeste
+Paraíba,2017,16560.85,0.554,Nordeste
+Pernambuco,2017,18911.3,0.573,Nordeste
+Alagoas,2017,14853.47,0.563,Nordeste
+Sergipe,2017,19131.79,0.548,Nordeste
+Bahia,2017,17478.48,0.559,Nordeste
+Minas Gerais,2017,27500.56,0.513,Sudeste
+Espírito Santo,2017,30872.48,0.517,Sudeste
+Rio de Janeiro,2017,35552.17,0.564,Sudeste
+São Paulo,2017,42484.51,0.528,Sudeste
+Paraná,2017,36145.48,0.478,Sul
+Santa Catarina,2017,38634.33,0.448,Sul
+Rio Grande do Sul,2017,36582.95,0.495,Sul
+Mato Grosso do Sul,2017,35680.12,0.485,Centro-Oeste
+Mato Grosso,2017,40582.43,0.511,Centro-Oeste
+Goiás,2017,28881.33,0.491,Centro-Oeste
+Distrito Federal,2017,79815.2,0.584,Centro-Oeste
+Rondônia,2018,25816.94,0.467,Norte
+Acre,2018,18012.01,0.551,Norte
+Amazonas,2018,24041.49,0.543,Norte
+Roraima,2018,26425.9,0.536,Norte
+Pará,2018,17164.12,0.536,Norte
+Amapá,2018,19349.52,0.543,Norte
+Tocantins,2018,21820.59,0.51,Norte
+Maranhão,2018,12789.92,0.561,Nordeste
+Piauí,2018,14757.94,0.564,Nordeste
+Ceará,2018,18363.38,0.58,Nordeste
+Rio Grande do Norte,2018,18274.1,0.573,Nordeste
+Paraíba,2018,17223.3,0.579,Nordeste
+Pernambuco,2018,19827.87,0.588,Nordeste
+Alagoas,2018,15726.68,0.569,Nordeste
+Sergipe,2018,20040.66,0.563,Nordeste
+Bahia,2018,18378.14,0.584,Nordeste
+Minas Gerais,2018,28931.25,0.518,Sudeste
+Espírito Santo,2018,32778.36,0.518,Sudeste
+Rio de Janeiro,2018,37213.91,0.573,Sudeste
+São Paulo,2018,45396.95,0.536,Sudeste
+Paraná,2018,38202.26,0.479,Sul
+Santa Catarina,2018,41539.06,0.448,Sul
+Rio Grande do Sul,2018,38580.4,0.509,Sul
+Mato Grosso do Sul,2018,37860.57,0.485,Centro-Oeste
+Mato Grosso,2018,43497.4,0.514,Centro-Oeste
+Goiás,2018,30588.1,0.487,Centro-Oeste
+Distrito Federal,2018,85661.39,0.586,Centro-Oeste
+Rondônia,2019,26909.1,0.468,Norte
+Acre,2019,18741.3,0.54,Norte
+Amazonas,2019,24719.5,0.539,Norte
+Roraima,2019,27506.77,0.531,Norte
+Pará,2019,18131.0,0.542,Norte
+Amapá,2019,20387.27,0.532,Norte
+Tocantins,2019,23145.45,0.518,Norte
+Maranhão,2019,13994.41,0.551,Nordeste
+Piauí,2019,16104.97,0.564,Nordeste
+Ceará,2019,19574.96,0.583,Nordeste
+Rio Grande do Norte,2019,19353.47,0.565,Nordeste
+Paraíba,2019,18260.66,0.56,Nordeste
+Pernambuco,2019,20857.94,0.573,Nordeste
+Alagoas,2019,16752.48,0.562,Nordeste
+Sergipe,2019,21081.71,0.551,Nordeste
+Bahia,2019,19416.36,0.569,Nordeste
+Minas Gerais,2019,30219.26,0.515,Sudeste
+Espírito Santo,2019,34262.1,0.505,Sudeste
+Rio de Janeiro,2019,38299.73,0.563,Sudeste
+São Paulo,2019,48149.2,0.541,Sudeste
+Paraná,2019,40485.67,0.477,Sul
+Santa Catarina,2019,44226.43,0.435,Sul
+Rio Grande do Sul,2019,40562.77,0.499,Sul
+Mato Grosso do Sul,2019,39965.71,0.471,Centro-Oeste
+Mato Grosso,2019,45963.85,0.518,Centro-Oeste
+Goiás,2019,32426.68,0.493,Centro-Oeste
+Distrito Federal,2019,87016.16,0.584,Centro-Oeste
+Rondônia,2020,28249.7,0.457,Norte
+Acre,2020,19639.46,0.528,Norte
+Amazonas,2020,25299.16,0.528,Norte
+Roraima,2020,28713.84,0.518,Norte
+Pará,2020,19992.51,0.519,Norte
+Amapá,2020,21463.35,0.52,Norte
+Tocantins,2020,24391.13,0.505,Norte
+Maranhão,2020,14198.81,0.539,Nordeste
+Piauí,2020,16568.04,0.536,Nordeste
+Ceará,2020,19659.22,0.536,Nordeste
+Rio Grande do Norte,2020,19445.69,0.536,Nordeste
+Paraíba,2020,18510.63,0.548,Nordeste
+Pernambuco,2020,20689.43,0.563,Nordeste
+Alagoas,2020,17154.54,0.551,Nordeste
+Sergipe,2020,21471.21,0.527,Nordeste
+Bahia,2020,19588.66,0.543,Nordeste
+Minas Gerais,2020,31238.4,0.504,Sudeste
+Espírito Santo,2020,36195.12,0.499,Sudeste
+Rio de Janeiro,2020,37887.89,0.553,Sudeste
+São Paulo,2020,48777.63,0.525,Sudeste
+Paraná,2020,41364.55,0.468,Sul
+Santa Catarina,2020,46132.88,0.422,Sul
+Rio Grande do Sul,2020,40582.43,0.493,Sul
+Mato Grosso do Sul,2020,42023.32,0.465,Centro-Oeste
+Mato Grosso,2020,49673.85,0.511,Centro-Oeste
+Goiás,2020,33177.34,0.485,Centro-Oeste
+Distrito Federal,2020,87016.16,0.579,Centro-Oeste
+Rondônia,2021,32410.6,0.442,Norte
+Acre,2021,21379.8,0.536,Norte
+Amazonas,2021,27552.1,0.538,Norte
+Roraima,2021,31298.3,0.51,Norte
+Pará,2021,22072.1,0.508,Norte
+Amapá,2021,22899.8,0.526,Norte
+Tocantins,2021,26732.1,0.488,Norte
+Maranhão,2021,17466.1,0.539,Nordeste
+Piauí,2021,19338.4,0.541,Nordeste
+Ceará,2021,22872.4,0.54,Nordeste
+Rio Grande do Norte,2021,22176.4,0.528,Nordeste
+Paraíba,2021,20387.8,0.551,Nordeste
+Pernambuco,2021,23428.1,0.569,Nordeste
+Alagoas,2021,19576.7,0.558,Nordeste
+Sergipe,2021,23838.2,0.536,Nordeste
+Bahia,2021,22530.8,0.536,Nordeste
+Minas Gerais,2021,36563.8,0.5,Sudeste
+Espírito Santo,2021,44987.2,0.486,Sudeste
+Rio de Janeiro,2021,42168.1,0.561,Sudeste
+São Paulo,2021,58514.8,0.529,Sudeste
+Paraná,2021,48753.8,0.458,Sul
+Santa Catarina,2021,54060.7,0.418,Sul
+Rio Grande do Sul,2021,46682.0,0.485,Sul
+Mato Grosso do Sul,2021,48937.1,0.467,Centro-Oeste
+Mato Grosso,2021,60132.8,0.505,Centro-Oeste
+Goiás,2021,39393.7,0.484,Centro-Oeste
+Distrito Federal,2021,92742.8,0.567,Centro-Oeste

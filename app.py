@@ -5,7 +5,7 @@ import requests
 import streamlit as st
 
 # ===============================================================
-# CONFIGURAÇÃO DA PÁGINA COM TEMA ROXO
+# CONFIGURAÇÃO DA PÁGINA 
 # ===============================================================
 st.set_page_config(
     layout="wide", 
@@ -49,7 +49,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ===============================================================
-# PALETA DE CORES ROXA PROFISSIONAL
+# PALETA DE CORES ROXA 
 # ===============================================================
 CORES_ROXO = {
     'roxo_escuro': '#6A0DAD',
@@ -73,7 +73,6 @@ CORES_REGIOES = {
 
 @st.cache_data
 def carregar_dados_nacionais():
-    """Carrega e combina os dados nacionais."""
     try:
         brasil_data_url = "https://github.com/leticiaborsaro/trabalho_dados/blob/main/Brazil.csv?raw=true"
         brasil_data = pd.read_csv(brasil_data_url)
@@ -125,7 +124,7 @@ df_estados = carregar_dados_estaduais()
 # ===============================================================
 # CABEÇALHO PRINCIPAL
 # ===============================================================
-st.markdown('<h1 class="main-header">📊 ANÁLISE ODS BRASIL</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="main-header">ANÁLISE ODS BRASIL</h1>', unsafe_allow_html=True)
 st.markdown('<h2 style="text-align: center; color: #8A2BE2;">Crescimento Econômico vs Desigualdade de Renda</h2>', unsafe_allow_html=True)
 
 st.markdown("""
@@ -138,12 +137,12 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ===============================================================
-# BARRA LATERAL COM DESIGN ROXO
+# BARRA LATERAL 
 # ===============================================================
 with st.sidebar:
     st.markdown("""
     <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center;'>
-        <h2>⚙️ CONTROLES</h2>
+        <h2> CONTROLES</h2>
         <p>Personalize sua análise</p>
     </div>
     """, unsafe_allow_html=True)
@@ -153,7 +152,7 @@ with st.sidebar:
     if not df_estados.empty:
         anos_disponiveis = sorted(df_estados['Ano'].unique())
         ano_selecionado = st.selectbox(
-            "**📅 Selecione o ano:**",
+            "** Selecione o ano:**",
             options=anos_disponiveis,
             index=len(anos_disponiveis)-1,
             help="Analise a evolução ano a ano"
@@ -161,7 +160,7 @@ with st.sidebar:
 
         regioes_disponiveis = sorted(df_estados['Regiao'].unique())
         regioes_selecionadas = st.multiselect(
-            "**🗺️ Filtre por regiões:**",
+            "**Filtre por regiões:**",
             options=regioes_disponiveis,
             default=regioes_disponiveis,
             help="Compare regiões específicas"
@@ -169,7 +168,7 @@ with st.sidebar:
 
         # KPIs DINÂMICOS NA BARRA LATERAL
         st.markdown("---")
-        st.markdown("### 📈 RESUMO DO ANO")
+        st.markdown("###RESUMO DO ANO")
         
         if regioes_selecionadas:
             df_filtrado = df_estados[(df_estados['Ano'] == ano_selecionado) & (df_estados['Regiao'].isin(regioes_selecionadas))]
@@ -179,22 +178,22 @@ with st.sidebar:
                 estado_mais_pobre = df_filtrado.loc[df_filtrado['PIB_per_Capita'].idxmin()]
                 estado_mais_igual = df_filtrado.loc[df_filtrado['Gini'].idxmin()]
                 
-                st.metric("🏆 Maior PIB", estado_mais_rico['Estado'], f"R$ {estado_mais_rico['PIB_per_Capita']:,.0f}")
-                st.metric("⚖️ Mais Igual", estado_mais_igual['Estado'], f"Gini: {estado_mais_igual['Gini']:.3f}")
+                st.metric(" - Maior PIB", estado_mais_rico['Estado'], f"R$ {estado_mais_rico['PIB_per_Capita']:,.0f}")
+                st.metric(" - Mais Igual", estado_mais_igual['Estado'], f"Gini: {estado_mais_igual['Gini']:.3f}")
                 
                 disparidade = estado_mais_rico['PIB_per_Capita'] / estado_mais_pobre['PIB_per_Capita']
-                st.metric("📏 Disparidade", f"{disparidade:.1f}x")
+                st.metric("Disparidade", f"{disparidade:.1f}x")
 
 # ===============================================================
 # LAYOUT PRINCIPAL COM ABAS
 # ===============================================================
-tab1, tab2, tab3 = st.tabs(["🌎 VISÃO NACIONAL", "🗺️ ANÁLISE ESTADUAL", "📚 CONCLUSÕES"])
+tab1, tab2, tab3 = st.tabs(["VISÃO NACIONAL", "ANÁLISE ESTADUAL", "CONCLUSÕES"])
 
 # ===============================================================
 # ABA 1: VISÃO NACIONAL
 # ===============================================================
 with tab1:
-    st.markdown('<h2 class="sub-header">📈 TRAJETÓRIA NACIONAL BRASILEIRA</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">TRAJETÓRIA NACIONAL BRASILEIRA</h2>', unsafe_allow_html=True)
     
     if not dados_nacionais.empty:
         # CÁLCULO DA CORRELAÇÃO
@@ -217,7 +216,7 @@ with tab1:
         with col2:
             st.markdown(f"""
             <div class="metric-card">
-                <h3>🔄 Correlação</h3>
+                <h3>Correlação</h3>
                 <p style="font-size: 2rem; margin: 0;">{correlacao:.3f}</p>
                 <p>Crescimento vs Desigualdade</p>
             </div>
@@ -227,7 +226,7 @@ with tab1:
             gini_atual = dados_nacionais['Gini'].iloc[-1]
             st.markdown(f"""
             <div class="metric-card">
-                <h3>⚖️ Desigualdade</h3>
+                <h3>Desigualdade</h3>
                 <p style="font-size: 2rem; margin: 0;">{gini_atual:.3f}</p>
                 <p>Índice de Gini 2023</p>
             </div>
@@ -276,16 +275,16 @@ with tab1:
         
         # EXPLICAÇÃO DO GRÁFICO NACIONAL - USANDO MARKDOWN PURO
         st.markdown("---")
-        st.markdown("### 🎯 O QUE ESTE GRÁFICO NOS REVELA?")
+        st.markdown("### O QUE ESTE GRÁFICO NOS REVELA?")
         
         st.markdown(f"""
-        **📈 Padrão de Crescimento Inclusivo:** A correlação negativa de **{correlacao:.3f}** indica que, historicamente, 
+        **Padrão de Crescimento Inclusivo:** A correlação negativa de **{correlacao:.3f}** indica que, historicamente, 
         quando a economia brasileira cresce, a desigualdade tende a diminuir.
         
-        **🔄 Períodos de Transformação:** Observe como a desigualdade caiu significativamente entre 2001-2014, 
+        **Períodos de Transformação:** Observe como a desigualdade caiu significativamente entre 2001-2014, 
         período marcado por políticas sociais e crescimento econômico.
         
-        **✅ Conclusão:** O Brasil demonstra que é possível conciliar crescimento com redução de desigualdades, 
+        **Conclusão:** O Brasil demonstra que é possível conciliar crescimento com redução de desigualdades, 
         mas isso requer políticas consistentes e um ambiente econômico favorável.
         """)
 
@@ -293,7 +292,7 @@ with tab1:
 # ABA 2: ANÁLISE ESTADUAL
 # ===============================================================
 with tab2:
-    st.markdown('<h2 class="sub-header">🔍 REALIDADES ESTADUAIS COMPARADAS</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">REALIDADES ESTADUAIS COMPARADAS</h2>', unsafe_allow_html=True)
     
     if not df_estados.empty and 'regioes_selecionadas' in locals() and regioes_selecionadas:
         df_filtrado = df_estados[(df_estados['Ano'] == ano_selecionado) & (df_estados['Regiao'].isin(regioes_selecionadas))]
@@ -303,7 +302,7 @@ with tab2:
             col1, col2 = st.columns(2)
             
             with col1:
-                st.markdown("#### 💰 RANKING DE RIQUEZA ESTADUAL")
+                st.markdown("#### RANKING DE RIQUEZA ESTADUAL")
                 
                 df_ranking_pib = df_filtrado.sort_values('PIB_per_Capita', ascending=True)
                 fig_pib = px.bar(
@@ -320,20 +319,20 @@ with tab2:
                 
                 # EXPLICAÇÃO PIB - MARKDOWN PURO
                 st.markdown("---")
-                st.markdown("#### 📊 INTERPRETANDO A RIQUEZA ESTADUAL")
+                st.markdown("#### INTERPRETANDO A RIQUEZA ESTADUAL")
                 st.markdown("""
-                **🏛️ Distrito Federal como Outlier:** A capital federal lidera com folga devido à concentração 
+                **Distrito Federal como Outlier:** A capital federal lidera com folga devido à concentração 
                 de serviços públicos e alta renda dos funcionários públicos.
                 
-                **🗺️ Padrão Regional:** Observe como estados do **Centro-Oeste e Sul** tendem a ter 
+                **Padrão Regional:** Observe como estados do **Centro-Oeste e Sul** tendem a ter 
                 PIBs mais altos, enquanto **Nordeste** concentra os menores valores.
                 
-                **⚡ Desafio do Desenvolvimento:** A diferença de 10.6x entre o mais rico e o mais pobre 
+                **Desafio do Desenvolvimento:** A diferença de 10.6x entre o mais rico e o mais pobre 
                 revela a necessidade de políticas regionais específicas.
                 """)
             
             with col2:
-                st.markdown("#### ⚖️ RANKING DE DESIGUALDADE")
+                st.markdown("####RANKING DE DESIGUALDADE")
                 
                 df_ranking_gini = df_filtrado.sort_values('Gini', ascending=False)
                 fig_gini = px.bar(
@@ -350,21 +349,21 @@ with tab2:
                 
                 # EXPLICAÇÃO GINI - MARKDOWN PURO
                 st.markdown("---")
-                st.markdown("#### 🎯 ENTENDENDO A DESIGUALDADE ESTADUAL")
+                st.markdown("#### ENTENDENDO A DESIGUALDADE ESTADUAL")
                 st.markdown("""
-                **🏆 Santa Catarina como Modelo:** Com Gini de 0.418, é referência nacional em igualdade, 
+                **Santa Catarina como Modelo:** Com Gini de 0.418, é referência nacional em igualdade, 
                 combinando desenvolvimento econômico com distribuição de renda.
                 
-                **🌳 Surpresa do Norte:** Estados como Rondônia mostram que é possível ter relativa igualdade 
+                **Surpresa do Norte:** Estados como Rondônia mostram que é possível ter relativa igualdade 
                 mesmo em regiões menos desenvolvidas economicamente.
                 
-                **🎯 Desafio Nordestino:** A região precisa enfrentar desigualdades históricas através de 
+                **Desafio Nordestino:** A região precisa enfrentar desigualdades históricas através de 
                 políticas educacionais e de geração de emprego.
                 """)
             
             # GRÁFICO DE DISPERSÃO
             st.markdown("---")
-            st.markdown("#### 🔗 RELAÇÃO ENTRE RIQUEZA E DESIGUALDADE")
+            st.markdown("####RELAÇÃO ENTRE RIQUEZA E DESIGUALDADE")
             
             fig_scatter = px.scatter(
                 df_filtrado, 
@@ -383,21 +382,21 @@ with tab2:
             
             # EXPLICAÇÃO SCATTER - MARKDOWN PURO
             st.markdown("---")
-            st.markdown("#### 🎪 MAPA DE RELAÇÕES: ONDE CADA ESTADO SE ENCAIXA?")
+            st.markdown("#### MAPA DE RELAÇÕES: ONDE CADA ESTADO SE ENCAIXA?")
             st.markdown("""
-            **✅ Quadrante Ideal (Inferior Direito):** Estados com **alto PIB e baixa desigualdade**. 
+            **Quadrante Ideal (Inferior Direito):** Estados com **alto PIB e baixa desigualdade**. 
             Exemplo: Santa Catarina - o modelo a ser seguido.
             
-            **🚨 Quadrante de Desafio (Superior Esquerdo):** Estados com **baixo PIB e alta desigualdade**. 
+            **Quadrante de Desafio (Superior Esquerdo):** Estados com **baixo PIB e alta desigualdade**. 
             Exemplo: Maranhão - necessidade de políticas urgentes.
             
-            **💡 Quadrante de Oportunidade (Inferior Esquerdo):** Estados com **baixo PIB mas relativa igualdade**. 
+            **Quadrante de Oportunidade (Inferior Esquerdo):** Estados com **baixo PIB mas relativa igualdade**. 
             Podem crescer mantendo a distribuição.
             
-            **⚖️ Quadrante de Concentração (Superior Direito):** Estados **ricos mas desiguais**. 
+            **Quadrante de Concentração (Superior Direito):** Estados **ricos mas desiguais**. 
             Precisam melhorar a distribuição dos ganhos.
             
-            **🎯 Conclusão:** O objetivo é mover todos os estados para o quadrante inferior direito - 
+            **Conclusão:** O objetivo é mover todos os estados para o quadrante inferior direito - 
             **ricos e igualitários**.
             """)
 
@@ -405,53 +404,53 @@ with tab2:
 # ABA 3: CONCLUSÕES
 # ===============================================================
 with tab3:
-    st.markdown('<h2 class="sub-header">🎯 CONCLUSÕES E RECOMENDAÇÕES</h2>', unsafe_allow_html=True)
+    st.markdown('<h2 class="sub-header">CONCLUSÕES E RECOMENDAÇÕES</h2>', unsafe_allow_html=True)
     
     col1, col2 = st.columns(2)
     
     with col1:
-        st.markdown("### ✅ DESCOBERTAS PRINCIPAIS")
+        st.markdown("### DESCOBERTAS PRINCIPAIS")
         st.markdown("""
-        **📈 Crescimento Inclusivo**
+        **Crescimento Inclusivo**
         O Brasil apresenta correlação negativa entre crescimento e desigualdade (-0.428), 
         indicando que o desenvolvimento econômico tem beneficiado os mais pobres.
         
-        **🗺️ Desafios Regionais**
+        **Desafios Regionais**
         Disparidade de 10.6x entre estados mais rico e mais pobre revela necessidade de 
         políticas regionais específicas.
         
-        **🏆 Modelos de Sucesso**
+        **Modelos de Sucesso**
         Santa Catarina combina alto desenvolvimento com baixa desigualdade (Gini 0.418), 
         servindo de referência nacional.
         
-        **⚖️ Nordeste Prioritário**
+        **Nordeste Prioritário**
         Região concentra os maiores desafios, exigindo atenção especial em políticas 
         redistributivas.
         """)
     
     with col2:
-        st.markdown("### 💡 RECOMENDAÇÕES ESTRATÉGICAS")
+        st.markdown("###RECOMENDAÇÕES ESTRATÉGICAS")
         st.markdown("""
-        **🎯 Políticas Regionais**
+        **Políticas Regionais**
         Desenvolver estratégias específicas para cada contexto estadual e regional, 
         reconhecendo as diferentes realidades.
         
-        **📚 Educação e Capacitação**
+        **Educação e Capacitação**
         Investir massivamente em educação nas regiões menos desenvolvidas para 
         quebrar ciclos de desigualdade.
         
-        **🏗️ Infraestrutura Regional**
+        **Infraestrutura Regional**
         Direcionar investimentos em infraestrutura para estados com menor desenvolvimento 
         econômico.
         
-        **📊 Monitoramento Contínuo**
+        **Monitoramento Contínuo**
         Manter sistema de acompanhamento dos indicadores de desigualdade para 
         ajustar políticas quando necessário.
         """)
     
     # MENSAGEM FINAL
     st.markdown("---")
-    st.markdown("### 🎓 CONCLUSÃO FINAL")
+    st.markdown("### CONCLUSÃO FINAL")
     st.markdown("""
     <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center;'>
     O Brasil demonstra que **crescimento econômico e redução de desigualdades podem caminhar juntos**. 

@@ -207,7 +207,7 @@ with tab1:
             crescimento = ((dados_nacionais['GNI_per_Capita'].iloc[-1] - dados_nacionais['GNI_per_Capita'].iloc[0]) / dados_nacionais['GNI_per_Capita'].iloc[0]) * 100
             st.markdown(f"""
             <div class="metric-card">
-                <h3>📈 Crescimento</h3>
+                <h3>Crescimento</h3>
                 <p style="font-size: 2rem; margin: 0;">+{crescimento:.1f}%</p>
                 <p>1990-2023</p>
             </div>
@@ -332,7 +332,7 @@ with tab2:
                 """)
             
             with col2:
-                st.markdown("####RANKING DE DESIGUALDADE")
+                st.markdown("#### RANKING DE DESIGUALDADE")
                 
                 df_ranking_gini = df_filtrado.sort_values('Gini', ascending=False)
                 fig_gini = px.bar(
@@ -363,7 +363,7 @@ with tab2:
             
             # GRÁFICO DE DISPERSÃO
             st.markdown("---")
-            st.markdown("####RELAÇÃO ENTRE RIQUEZA E DESIGUALDADE")
+            st.markdown("#### RELAÇÃO ENTRE RIQUEZA E DESIGUALDADE")
             
             fig_scatter = px.scatter(
                 df_filtrado, 
@@ -429,7 +429,7 @@ with tab3:
         """)
     
     with col2:
-        st.markdown("###RECOMENDAÇÕES ESTRATÉGICAS")
+        st.markdown("### RECOMENDAÇÕES ESTRATÉGICAS")
         st.markdown("""
         **Políticas Regionais**
         Desenvolver estratégias específicas para cada contexto estadual e regional, 
@@ -453,8 +453,8 @@ with tab3:
     st.markdown("### CONCLUSÃO FINAL")
     st.markdown("""
     <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center;'>
-    O Brasil demonstra que **crescimento econômico e redução de desigualdades podem caminhar juntos**. 
-    No entanto, os desafios regionais históricos exigem **políticas persistentes e bem direcionadas** 
+    O Brasil demonstra que crescimento econômico e redução de desigualdades podem caminhar juntos. 
+    No entanto, os desafios regionais históricos exigem políticas persistentes e bem direcionadas 
     para alcançarmos um desenvolvimento verdadeiramente sustentável e inclusivo.
     </div>
     """, unsafe_allow_html=True)

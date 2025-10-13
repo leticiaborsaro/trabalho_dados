@@ -152,7 +152,7 @@ with st.sidebar:
     if not df_estados.empty:
         anos_disponiveis = sorted(df_estados['Ano'].unique())
         ano_selecionado = st.selectbox(
-            "** Selecione o ano: **",
+            "Selecione o ano: ",
             options=anos_disponiveis,
             index=len(anos_disponiveis)-1,
             help="Analise a evolução ano a ano"
@@ -160,7 +160,7 @@ with st.sidebar:
 
         regioes_disponiveis = sorted(df_estados['Regiao'].unique())
         regioes_selecionadas = st.multiselect(
-            "** Filtre por regiões: **",
+            "Filtre por regiões: ",
             options=regioes_disponiveis,
             default=regioes_disponiveis,
             help="Compare regiões específicas"

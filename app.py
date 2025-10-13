@@ -68,7 +68,7 @@ CORES_REGIOES = {
 }
 
 # ===============================================================
-# FUNÇÕES DE CARREGAMENTO (SIMPLIFICADAS E SEGURAS)
+# FUNÇÕES DE CARREGAMENTO
 # ===============================================================
 
 @st.cache_data
@@ -233,7 +233,7 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
         
-        # GRÁFICO NACIONAL SIMPLIFICADO E SEGURO
+        # GRÁFICO NACIONAL
         fig_nacional = go.Figure()
         
         # GNI
@@ -256,7 +256,7 @@ with tab1:
                 yaxis='y2'
             ))
         
-        # Layout simplificado
+        # Layout
         fig_nacional.update_layout(
             title='EVOLUÇÃO DO CRESCIMENTO E DESIGUALDADE NO BRASIL (1990-2023)',
             xaxis_title='Ano',
@@ -274,20 +274,20 @@ with tab1:
         
         st.plotly_chart(fig_nacional, use_container_width=True)
         
-        # EXPLICAÇÃO DO GRÁFICO NACIONAL
-        st.markdown("""
-        <div class="explanation-box">
-            <h4>🎯 O QUE ESTE GRÁFICO NOS REVELA?</h4>
-            <p><strong>Padrão de Crescimento Inclusivo:</strong> A correlação negativa de {:.3f} indica que, historicamente, 
-            quando a economia brasileira cresce, a desigualdade tende a diminuir.</p>
-            
-            <p><strong>Períodos de Transformação:</strong> Observe como a desigualdade caiu significativamente entre 2001-2014, 
-            período marcado por políticas sociais e crescimento econômico.</p>
-            
-            <p><strong>Conclusão:</strong> O Brasil demonstra que é possível conciliar crescimento com redução de desigualdades, 
-            mas isso requer políticas consistentes.</p>
-        </div>
-        """.format(correlacao), unsafe_allow_html=True)
+        # EXPLICAÇÃO DO GRÁFICO NACIONAL - USANDO MARKDOWN PURO
+        st.markdown("---")
+        st.markdown("### 🎯 O QUE ESTE GRÁFICO NOS REVELA?")
+        
+        st.markdown(f"""
+        **📈 Padrão de Crescimento Inclusivo:** A correlação negativa de **{correlacao:.3f}** indica que, historicamente, 
+        quando a economia brasileira cresce, a desigualdade tende a diminuir.
+        
+        **🔄 Períodos de Transformação:** Observe como a desigualdade caiu significativamente entre 2001-2014, 
+        período marcado por políticas sociais e crescimento econômico.
+        
+        **✅ Conclusão:** O Brasil demonstra que é possível conciliar crescimento com redução de desigualdades, 
+        mas isso requer políticas consistentes e um ambiente econômico favorável.
+        """)
 
 # ===============================================================
 # ABA 2: ANÁLISE ESTADUAL
@@ -318,16 +318,19 @@ with tab2:
                 )
                 st.plotly_chart(fig_pib, use_container_width=True)
                 
+                # EXPLICAÇÃO PIB - MARKDOWN PURO
+                st.markdown("---")
+                st.markdown("#### 📊 INTERPRETANDO A RIQUEZA ESTADUAL")
                 st.markdown("""
-                <div class="explanation-box">
-                    <h4>📊 INTERPRETANDO A RIQUEZA ESTADUAL</h4>
-                    <p><strong>Distrito Federal como Outlier:</strong> A capital federal lidera devido à concentração 
-                    de serviços públicos e alta renda.</p>
-                    
-                    <p><strong>Padrão Regional:</strong> Estados do <strong>Centro-Oeste e Sul</strong> tendem a ter 
-                    PIBs mais altos, enquanto <strong>Nordeste</strong> concentra os menores valores.</p>
-                </div>
-                """, unsafe_allow_html=True)
+                **🏛️ Distrito Federal como Outlier:** A capital federal lidera com folga devido à concentração 
+                de serviços públicos e alta renda dos funcionários públicos.
+                
+                **🗺️ Padrão Regional:** Observe como estados do **Centro-Oeste e Sul** tendem a ter 
+                PIBs mais altos, enquanto **Nordeste** concentra os menores valores.
+                
+                **⚡ Desafio do Desenvolvimento:** A diferença de 10.6x entre o mais rico e o mais pobre 
+                revela a necessidade de políticas regionais específicas.
+                """)
             
             with col2:
                 st.markdown("#### ⚖️ RANKING DE DESIGUALDADE")
@@ -345,15 +348,19 @@ with tab2:
                 )
                 st.plotly_chart(fig_gini, use_container_width=True)
                 
+                # EXPLICAÇÃO GINI - MARKDOWN PURO
+                st.markdown("---")
+                st.markdown("#### 🎯 ENTENDENDO A DESIGUALDADE ESTADUAL")
                 st.markdown("""
-                <div class="explanation-box">
-                    <h4>🎯 ENTENDENDO A DESIGUALDADE ESTADUAL</h4>
-                    <p><strong>Santa Catarina como Modelo:</strong> Com Gini de 0.418, é referência nacional em igualdade.</p>
-                    
-                    <p><strong>Desafio Nordestino:</strong> A região precisa enfrentar desigualdades históricas através de 
-                    políticas educacionais e de geração de emprego.</p>
-                </div>
-                """, unsafe_allow_html=True)
+                **🏆 Santa Catarina como Modelo:** Com Gini de 0.418, é referência nacional em igualdade, 
+                combinando desenvolvimento econômico com distribuição de renda.
+                
+                **🌳 Surpresa do Norte:** Estados como Rondônia mostram que é possível ter relativa igualdade 
+                mesmo em regiões menos desenvolvidas economicamente.
+                
+                **🎯 Desafio Nordestino:** A região precisa enfrentar desigualdades históricas através de 
+                políticas educacionais e de geração de emprego.
+                """)
             
             # GRÁFICO DE DISPERSÃO
             st.markdown("---")
@@ -374,16 +381,25 @@ with tab2:
             
             st.plotly_chart(fig_scatter, use_container_width=True)
             
+            # EXPLICAÇÃO SCATTER - MARKDOWN PURO
+            st.markdown("---")
+            st.markdown("#### 🎪 MAPA DE RELAÇÕES: ONDE CADA ESTADO SE ENCAIXA?")
             st.markdown("""
-            <div class="explanation-box">
-                <h4>🎪 MAPA DE RELAÇÕES</h4>
-                <p><strong>Quadrante Ideal:</strong> Estados com <strong>alto PIB e baixa desigualdade</strong> 
-                (inferior direito) - modelo a ser seguido.</p>
-                
-                <p><strong>Quadrante de Desafio:</strong> Estados com <strong>baixo PIB e alta desigualdade</strong> 
-                (superior esquerdo) - necessidade de políticas urgentes.</p>
-            </div>
-            """, unsafe_allow_html=True)
+            **✅ Quadrante Ideal (Inferior Direito):** Estados com **alto PIB e baixa desigualdade**. 
+            Exemplo: Santa Catarina - o modelo a ser seguido.
+            
+            **🚨 Quadrante de Desafio (Superior Esquerdo):** Estados com **baixo PIB e alta desigualdade**. 
+            Exemplo: Maranhão - necessidade de políticas urgentes.
+            
+            **💡 Quadrante de Oportunidade (Inferior Esquerdo):** Estados com **baixo PIB mas relativa igualdade**. 
+            Podem crescer mantendo a distribuição.
+            
+            **⚖️ Quadrante de Concentração (Superior Direito):** Estados **ricos mas desiguais**. 
+            Precisam melhorar a distribuição dos ganhos.
+            
+            **🎯 Conclusão:** O objetivo é mover todos os estados para o quadrante inferior direito - 
+            **ricos e igualitários**.
+            """)
 
 # ===============================================================
 # ABA 3: CONCLUSÕES
@@ -394,38 +410,53 @@ with tab3:
     col1, col2 = st.columns(2)
     
     with col1:
+        st.markdown("### ✅ DESCOBERTAS PRINCIPAIS")
         st.markdown("""
-        <div class="explanation-box">
-            <h3>✅ DESCOBERTAS PRINCIPAIS</h3>
-            
-            <p><strong>📈 Crescimento Inclusivo:</strong> Brasil apresenta correlação negativa entre crescimento e desigualdade.</p>
-            
-            <p><strong>🗺️ Desafios Regionais:</strong> Disparidade de 10.6x entre estados mais rico e mais pobre.</p>
-            
-            <p><strong>🏆 Modelos de Sucesso:</strong> Santa Catarina combina desenvolvimento com baixa desigualdade.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        **📈 Crescimento Inclusivo**
+        O Brasil apresenta correlação negativa entre crescimento e desigualdade (-0.428), 
+        indicando que o desenvolvimento econômico tem beneficiado os mais pobres.
+        
+        **🗺️ Desafios Regionais**
+        Disparidade de 10.6x entre estados mais rico e mais pobre revela necessidade de 
+        políticas regionais específicas.
+        
+        **🏆 Modelos de Sucesso**
+        Santa Catarina combina alto desenvolvimento com baixa desigualdade (Gini 0.418), 
+        servindo de referência nacional.
+        
+        **⚖️ Nordeste Prioritário**
+        Região concentra os maiores desafios, exigindo atenção especial em políticas 
+        redistributivas.
+        """)
     
     with col2:
+        st.markdown("### 💡 RECOMENDAÇÕES ESTRATÉGICAS")
         st.markdown("""
-        <div class="explanation-box">
-            <h3>💡 RECOMENDAÇÕES ESTRATÉGICAS</h3>
-            
-            <p><strong>🎯 Políticas Regionais:</strong> Estratégias específicas para cada contexto.</p>
-            
-            <p><strong>📚 Educação:</strong> Investir em regiões menos desenvolvidas.</p>
-            
-            <p><strong>🏗️ Infraestrutura:</strong> Direcionar investimentos para estados pobres.</p>
-        </div>
-        """, unsafe_allow_html=True)
+        **🎯 Políticas Regionais**
+        Desenvolver estratégias específicas para cada contexto estadual e regional, 
+        reconhecendo as diferentes realidades.
+        
+        **📚 Educação e Capacitação**
+        Investir massivamente em educação nas regiões menos desenvolvidas para 
+        quebrar ciclos de desigualdade.
+        
+        **🏗️ Infraestrutura Regional**
+        Direcionar investimentos em infraestrutura para estados com menor desenvolvimento 
+        econômico.
+        
+        **📊 Monitoramento Contínuo**
+        Manter sistema de acompanhamento dos indicadores de desigualdade para 
+        ajustar políticas quando necessário.
+        """)
     
     # MENSAGEM FINAL
+    st.markdown("---")
+    st.markdown("### 🎓 CONCLUSÃO FINAL")
     st.markdown("""
-    <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center; margin-top: 2rem;'>
-        <h2>🎓 CONCLUSÃO FINAL</h2>
-        <p style='font-size: 1.2rem;'>
-        O Brasil demonstra que <strong>crescimento econômico e redução de desigualdades podem caminhar juntos</strong>.
-        </p>
+    <div style='background: linear-gradient(135deg, #6A0DAD, #9370DB); padding: 2rem; border-radius: 15px; color: white; text-align: center;'>
+    O Brasil demonstra que **crescimento econômico e redução de desigualdades podem caminhar juntos**. 
+    No entanto, os desafios regionais históricos exigem **políticas persistentes e bem direcionadas** 
+    para alcançarmos um desenvolvimento verdadeiramente sustentável e inclusivo.
     </div>
     """, unsafe_allow_html=True)
 
@@ -435,6 +466,7 @@ with tab3:
 st.markdown("---")
 st.markdown("""
 <div style='text-align: center; color: #666; font-size: 0.9rem;'>
-    <p><strong>Análise ODS Brasil</strong> | Dados: UNDP, Banco Mundial, IBGE</p>
+    <p><strong>Análise ODS Brasil</strong> | Dados: UNDP, Banco Mundial, IBGE | Desenvolvido para análise acadêmica</p>
+    <p>ODS 8 - Crescimento Econômico | ODS 10 - Redução das Desigualdades</p>
 </div>
 """, unsafe_allow_html=True)

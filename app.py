@@ -14,7 +14,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# CSS personalizado para tema roxo
+# CSS 
 st.markdown("""
 <style>
     .main-header {
@@ -160,7 +160,7 @@ with st.sidebar:
 
         regioes_disponiveis = sorted(df_estados['Regiao'].unique())
         regioes_selecionadas = st.multiselect(
-            "**Filtre por regiões:**",
+            "** Filtre por regiões: **",
             options=regioes_disponiveis,
             default=regioes_disponiveis,
             help="Compare regiões específicas"
@@ -168,7 +168,7 @@ with st.sidebar:
 
         # KPIs DINÂMICOS NA BARRA LATERAL
         st.markdown("---")
-        st.markdown("###RESUMO DO ANO")
+        st.markdown("### RESUMO DO ANO")
         
         if regioes_selecionadas:
             df_filtrado = df_estados[(df_estados['Ano'] == ano_selecionado) & (df_estados['Regiao'].isin(regioes_selecionadas))]
